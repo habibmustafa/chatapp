@@ -19,7 +19,7 @@ module.exports.register = async (req, res, next) => {
       // delete user.password;
       return res.json({
          user,
-         status: true
+         status: true,
       });
    } catch (ex) {
       next(ex);
@@ -50,3 +50,24 @@ module.exports.login = async (req, res, next) => {
       next(ex);
    }
 };
+
+// allUsers
+module.exports.allUsers = async (req, res, next) => {
+   try {
+     const users = await User.find()
+     return res.json(users);
+   } catch (ex) {
+     next(ex);
+   }
+ };
+
+// logOut
+// module.exports.logOut = async (req, res, next) => {
+//    try {
+//       if (!req.params.id) return res.json({ msg: "User id is required " });
+//       onlineUsers.delete(req.params.id);
+//       return res.status(200).send();
+//    } catch (ex) {
+//       next(ex);
+//    }
+// };

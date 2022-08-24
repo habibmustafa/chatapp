@@ -2,7 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const socket = require("socket.io");
 const mongoose = require("mongoose");
-const auth = require("./routes/auth");
+const authRoutes = require("./routes/authRoutes");
+const msgRoutes = require("./routes/msgRoutes");
 const app = express();
 
 const dbURL =
@@ -11,7 +12,8 @@ mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(cors())
 app.use(express.json());
-app.use("/auth", auth);
+app.use("/auth", authRoutes);
+app.use("/msg", msgRoutes);
 
 
 
@@ -21,23 +23,23 @@ const server = app.listen("5000", () => {
 });
 
 // socket.io connect react
-const io = socket(server, {
-   cors: {
-      origin: "http://localhost:3000",
-      credentials: true,
-   },
-});
+// const io = socket(server, {
+//    cors: {
+//       origin: "http://localhost:3000",
+//       credentials: true,
+//    },
+// });
 
 // socket.io connection
-io.on("connection", (socket) => {
-   console.log("a user connected:", socket.id);
-   socket.join("clock-room");
+// io.on("connection", (socket) => {
+//    console.log("a user connected:", socket.id);
+//    socket.join("clock-room");
 
-   socket.on("disconnect", (reason) => {
-      console.log(reason);
-   });
+//    socket.on("disconnect", (reason) => {
+//       console.log(reason);
+//    });
 
-   socket.on("chat", (data) => {
-      io.sockets.emit("chat", data);
-   });
-});
+//    socket.on("chat", (data) => {
+//       io.sockets.emit("chat", data);
+//    });
+// });

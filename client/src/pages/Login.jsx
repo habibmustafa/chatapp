@@ -1,28 +1,29 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios"
+import axios from "axios";
 import { loginRoute } from "../utils/APIRoutes";
 
 const Login = () => {
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
 
-   const navigate = useNavigate()
+   const navigate = useNavigate();
    const handleSubmit = async (e) => {
       e.preventDefault();
-      const {data} = await axios.post(loginRoute, {
+      const { data } = await axios.post(loginRoute, {
          email,
-         password
-      })
+         password,
+      });
       if (data.status === false) {
          toast.error(data.message);
-       }
-       if (data.status === true) {
+      }
+      if (data.status === true) {
          toast.success("Login Successful");
-         
-         navigate("/dashboard");
-       }
+         localStorage.setItem("user", JSON.stringify(data.user));
+
+         navigate("/");
+      }
    };
 
    return (
@@ -46,7 +47,6 @@ const Login = () => {
                </div>
 
                <div className="flex flex-col break-words bg-white rounded-lg p-9 mb-6 w-full max-w-[450px]">
-                  
                   {/* card */}
                   <form onSubmit={handleSubmit}>
                      <div className="mb-4">
