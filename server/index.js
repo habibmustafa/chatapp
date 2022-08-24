@@ -1,32 +1,23 @@
 const express = require("express");
-// const cors = require("cors");
+const cors = require("cors");
 const socket = require("socket.io");
 const mongoose = require("mongoose");
-const User = require("./models/user");
-
+const auth = require("./routes/auth");
 const app = express();
 
-app.use(express.json())
 const dbURL =
-   "mongodb+srv://habibmustafa:hebib24589@chat-app.dxp6hh7.mongodb.net/?retryWrites=true&w=majority";
-mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true })
+   "mongodb+srv://habibmustafa:hebib24589@chat-app.uibf8p5.mongodb.net/?retryWrites=true&w=majority";
+mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true });
 
+app.use(cors())
+app.use(express.json());
+app.use("/auth", auth);
+
+
+
+// listening
 const server = app.listen("5000", () => {
    console.log("Listening...");
-});
-
-app.get("/", async (req, res) => {
-   const user = new User({
-      email: "habibmustafa@gmail.com",
-      username: "habibmustafa",
-      password: "hebib24589",
-   });
-
-   try {
-      await user.save();
-   } catch (err) {
-      console.log(err.message);
-   }
 });
 
 // socket.io connect react

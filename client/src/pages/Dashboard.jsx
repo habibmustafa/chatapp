@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useRef } from "react";
 import { io } from "socket.io-client";
+import { host } from "../utils/APIRoutes";
 
-const socket = io("http://localhost:5000");
+const socket = io(host);
 
 const App = () => {
    const [value, setValue] = useState("");
    const [messages, setMessages] = useState([]);
-
-   // const getFetch = async () => {
-   //    const response = await fetch("http://localhost:3001");
-   //    const data = await response.text();
-   //    return setText(data);
-   // };
 
    useEffect(() => {
       socket.on("connect", () => console.log(socket.id));

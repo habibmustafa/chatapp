@@ -1,17 +1,32 @@
 import React, { useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { registerRoute } from "../utils/APIRoutes";
 
 const Register = () => {
    const [email, setEmail] = useState("");
-   const [displayName, setDisplayName] = useState("");
+   const [username, setUsername] = useState("");
    const [password, setPassword] = useState("");
 
    const navigate = useNavigate();
 
    const handleSubmit = async (e) => {
       e.preventDefault();
+      const { data } = await axios.post(registerRoute, {
+         username,
+         email,
+         password,
+      });
 
-      navigate("../login");
+      if(data.status) {
+         toast.success("Registration Successful")
+         navigate("../login");
+      }
+      else {
+         toast.error(data.message);
+      }
+
    };
 
    return (
@@ -36,7 +51,7 @@ const Register = () => {
 
                {/* card */}
                <div className="flex flex-col break-words bg-white rounded-lg p-9 mb-6 w-full max-w-[450px]">
-                  <form onSubmit={handleSubmit}>
+                  <form method="post" onSubmit={handleSubmit}>
                      <div className="mb-4">
                         <label
                            className="mb-2 block font-semibold"
@@ -54,6 +69,7 @@ const Register = () => {
                               className="w-full px-4 outline-0 border-0"
                               type="email"
                               id="email"
+                              name="email"
                               placeholder="Enter Email"
                            />
                         </div>
@@ -71,11 +87,12 @@ const Register = () => {
                               <i className="ri-user-2-line"></i>
                            </span>
                            <input
-                              onChange={(e) => setDisplayName(e.target.value)}
-                              value={displayName}
+                              onChange={(e) => setUsername(e.target.value)}
+                              value={username}
                               className="w-full px-4 outline-0 border-0"
                               type="text"
                               id="username"
+                              name="username"
                               placeholder="Enter Username"
                            />
                         </div>
@@ -98,6 +115,7 @@ const Register = () => {
                               className="w-full px-4 outline-0 border-0"
                               type="password"
                               id="password"
+                              name="password"
                               placeholder="Enter Password"
                            />
                         </div>

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios"
+import { loginRoute } from "../utils/APIRoutes";
 
 const Login = () => {
    const [email, setEmail] = useState("");
@@ -9,13 +11,22 @@ const Login = () => {
    const navigate = useNavigate()
    const handleSubmit = async (e) => {
       e.preventDefault();
-      toast.success("Successfully toasted!");
-      navigate("../dashboard")
+      const {data} = await axios.post(loginRoute, {
+         email,
+         password
+      })
+      if (data.status === false) {
+         toast.error(data.message);
+       }
+       if (data.status === true) {
+         toast.success("Login Successful");
+         
+         navigate("/dashboard");
+       }
    };
 
    return (
       <div className=" h-full bg-[#f7f7ff]">
-         <Toaster position="top-right" />
          <div className="wrapper h-full">
             <div className="flex justify-center flex-col items-center h-full">
                {/* logo */}
