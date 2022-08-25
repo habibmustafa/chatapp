@@ -1,0 +1,63 @@
+@use "./scss/" as *;
+
+* {
+   padding: 0;
+   margin: 0;
+   box-sizing: border-box;
+   -webkit-tap-highlight-color: transparent;
+}
+
+body {
+   // background-color: $neutral-100;
+   font-family: sans-serif;
+}
+
+.wrapper {
+   max-width: 1140px;
+   padding: 0 12px;
+   margin: 0 auto;
+   @include tablet {
+      max-width: 960px;
+   }
+   @include mobileL {
+      max-width: 720px;
+   }
+   @include mobileP {
+      max-width: 540px;
+   }
+}
+
+.h4-size {
+   color: $bs-gray-700;
+   font-weight: 600;
+   font-size: 1.3125rem;
+   line-height: 1.2;
+}
+
+.text {
+   color: $bs-text-muted;
+}
+
+a {
+   text-decoration: none;
+   color: unset;
+}
+
+button,
+input,
+textarea {
+   outline: 0;
+   border: none;
+}
+
+ul {
+   list-style-type: none;
+}
+
+img {
+   max-width: 100%;
+}
+
+iframe {
+   border: 0;
+}

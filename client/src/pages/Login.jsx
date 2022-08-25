@@ -27,7 +27,7 @@ const Login = () => {
    };
 
    return (
-      <div className=" h-full bg-[#f7f7ff]">
+      <div className="login h-full bg-[#f7f7ff]">
          <div className="wrapper h-full">
             <div className="flex justify-center flex-col items-center h-full">
                {/* logo */}
@@ -39,7 +39,7 @@ const Login = () => {
                {/* content */}
                <div className="flex flex-col items-center mb-6">
                   <h4 className="text-lg font-semibold text-[#495057]">
-                     Sing in
+                     Sign in
                   </h4>
                   <p className="text-[#7a7f9a]">
                      Sing in to coutinue to ChatAPP
@@ -65,7 +65,7 @@ const Login = () => {
                                  setEmail(e.target.value);
                               }}
                               value={email}
-                              className="w-full px-4 outline-0 border-0"
+                              className="w-full px-4 outline-0 border-0 text-sm font-medium"
                               type="email"
                               id="email"
                               placeholder="Enter Email"
@@ -92,7 +92,7 @@ const Login = () => {
                                  setPassword(e.target.value);
                               }}
                               value={password}
-                              className="w-full px-4 outline-0 border-0"
+                              className="w-full px-4 outline-0 border-0 text-sm font-medium"
                               type="password"
                               id="password"
                               placeholder="Enter Password"
@@ -102,29 +102,30 @@ const Login = () => {
 
                      <div className="mb-4">
                         <button
-                           className="w-full flex justify-center items-center p-2 rounded-[4px] bg-[#766fd8] text-white hover:bg-[#6159cb]"
+                           className="w-full flex justify-center items-center p-2 rounded-[4px] transition-all bg-[#7269ef] text-white hover:bg-[#6159cb]"
                            type="submit"
                         >
-                           Sing in
+                           Sign in
                         </button>
                      </div>
                   </form>
                </div>
 
                {/* text footer */}
-               <div className="mt-12 text-center">
+               <div className="mt-12 text-center text-[15px] font-medium text-gray-700">
                   <p className="mb-4">
                      Don't have an account?{" "}
-                     <Link className="text-blue-600" to="/register">
+                     <Link className="text-[#7269ef]" to="/register">
                         Signup now
                      </Link>
                   </p>
-                  <p>© 2022 ChatAPp. Crafted with by habibmustafa</p>
+                  <p>© 2022 ChatAPP. Crafted with by habibmustafa</p>
                </div>
             </div>
          </div>
       </div>
    );
 };
+
 
 export default Login;

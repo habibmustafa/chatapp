@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 import {
@@ -11,7 +11,7 @@ import LogOut from "../components/LogOut";
 // import UsersSidebar from "../components/UsersSidebar";
 import axios from "axios";
 
-// const socket = io(host);
+const socket = io(host);
 
 const App = () => {
    const [value, setValue] = useState("");
@@ -19,6 +19,8 @@ const App = () => {
    const [user, setUser] = useState(false);
    const [chatUser, setChatUser] = useState(false);
    const [allUsers, setAllUsers] = useState("");
+   const [arrivalMessage, setArrivalMessage] = useState(null);
+   const scrollRef = useRef();
    const navigate = useNavigate();
 
    useEffect(() => {
@@ -39,6 +41,12 @@ const App = () => {
          }
       }
       getFetch();
+
+      if (user) {
+         socket.on("connect", () => {
+            socket.emit("add-user", user._id);
+         });
+      }
    }, [user]);
 
    useEffect(() => {
@@ -56,15 +64,26 @@ const App = () => {
    console.log(messages);
 
    // useEffect(() => {
-   //    socket.on("connect", () => console.log(socket.id));
-
-   //    socket.on("chat", (data) => {
-   //       setMessages([...messages, data]);
+   // socket.on("connect", () => {
+   //    socket.emit("storeClientInfo", {
+   //       customId: user._id,
    //    });
-   // }, [messages]);
+   //    console.log(socket.id);
+   // });
+
+   // socket.on("chat", (data) => {
+   //    setMessages([...messages, data]);
+   // });
+   // }, [user]);
 
    const handleSubmit = async (e) => {
       e.preventDefault();
+      const data = await JSON.parse(localStorage.getItem("user"));
+      socket.emit("send-msg", {
+         to: user._id,
+         from: chatUser._id,
+         message: value,
+      });
       if (value) {
          await axios.post(sendMessageRoute, {
             from: user._id,
@@ -72,10 +91,28 @@ const App = () => {
             message: value,
          });
       }
-      setValue("");
+      const msgs = [...messages];
+      msgs.push({ fromSelf: true, message: value });
+      setMessages(msgs);
       // socket.emit("chat", value);
       // setValue("");
    };
+
+   useEffect(() => {
+      if (socket) {
+         socket.on("msg-recieve", (message) => {
+            setArrivalMessage({ fromSelf: false, message: message });
+         });
+      }
+   }, []);
+
+   useEffect(() => {
+      arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
+   }, [arrivalMessage]);
+
+   useEffect(() => {
+      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+   }, [messages]);
 
    return (
       <div className="flex items-center justify-center flex-col h-full w-2/5 mx-auto">
@@ -99,6 +136,7 @@ const App = () => {
                   ? messages.map((message, i) => (
                        <p
                           key={i}
+                          ref={scrollRef}
                           className="text-lg p-3 mb-1 font-semibold even:bg-slate-200"
                        >
                           {message.message}
@@ -126,4 +164,3 @@ const App = () => {
    );
 };
 
-export default App;

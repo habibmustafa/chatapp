@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import Routing from "./config/Routing";
+import "./App.scss"
 import { Toaster } from "react-hot-toast";
 import 'remixicon/fonts/remixicon.css'
 
