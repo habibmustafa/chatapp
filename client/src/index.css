@@ -5,6 +5,7 @@
 @layer base {
    html, body, #root {
       @apply h-full;
+      font-family: sans-serif;
    }
    .wrapper {
       max-width: 1140px;
@@ -22,4 +23,8 @@
    .text {
       color: #7a7f9a;
    }
+
+   .scrollbar-border::-webkit-scrollbar-thumb {
+         border-radius: 15px;
+      }
  }

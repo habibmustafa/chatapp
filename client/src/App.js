@@ -1,17 +1,20 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import Routing from "./config/Routing";
-import "./App.scss"
 import { Toaster } from "react-hot-toast";
+import { Provider } from "react-redux";
+import { store } from "./store";
 import 'remixicon/fonts/remixicon.css'
 
 
 const App = () => {
    return (
-      <BrowserRouter>
-         <Toaster position="top-right" />
-         <Routing />
-      </BrowserRouter>
+      <Provider store={store}>
+         <BrowserRouter>
+            <Toaster position="top-right" />
+            <Routing />
+         </BrowserRouter>
+      </Provider>
    );
 };
 
