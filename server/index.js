@@ -6,12 +6,16 @@ const authRoutes = require("./routes/authRoutes");
 const msgRoutes = require("./routes/msgRoutes");
 const app = express();
 
-const dbURL =
-   "mongodb+srv://habibmustafa:hebib24589@chat-app.uibf8p5.mongodb.net/?retryWrites=true&w=majority";
-mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true });
-
 app.use(cors());
 app.use(express.json());
+
+const dbURL =
+   "mongodb+srv://habibmustafa:hebib24589@chat-app.uibf8p5.mongodb.net/?retryWrites=true&w=majority";
+mongoose
+   .connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true })
+   .then(() => console.log("Succesfull"))
+   .catch((err) => console.log(err.message));
+
 app.use("/auth", authRoutes);
 app.use("/msg", msgRoutes);
 

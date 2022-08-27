@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { LogInput } from "../components/LogInput";
 import { loginRoute } from "../utils/APIRoutes";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUser } from "../store/userSlice";
 
 const Login = () => {
@@ -24,9 +24,8 @@ const Login = () => {
       }
       if (data.status === true) {
          toast.success("Login Successful");
-         // localStorage.setItem("user", JSON.stringify(data.user));
-         console.log(data.user);
-         // dispatch(setUser(data.user))
+         localStorage.setItem("user", JSON.stringify(data.user));
+         dispatch(setUser(data.user))
 
          navigate("/");
       }

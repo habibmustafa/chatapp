@@ -1,9 +1,12 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 export const Header = () => {
+   const { chatUser } = useSelector((state) => state.user);
+   // console.log(chatUser.createdAt.substring(11, 16));
+
    return (
       <div className="header p-6 border-b border-zinc-100 text-[#495057] text-[15px] leading-[22.5px] flex justify-between ">
-         
          {/* name */}
          <div className="flex items-center gap-4">
             <div className="rounded-full w-[35px] h-[35px] bg-cover text-left">
@@ -13,7 +16,9 @@ export const Header = () => {
                   alt=""
                />
             </div>
-            <p className="cursor-pointer font-semibold leading-5">Doris Brown</p>
+            <p className="cursor-pointer font-semibold leading-5">
+               {chatUser.username}
+            </p>
          </div>
 
          {/* right icons */}

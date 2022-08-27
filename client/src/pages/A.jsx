@@ -21,15 +21,6 @@ const App = () => {
    const [allUsers, setAllUsers] = useState("");
    const [arrivalMessage, setArrivalMessage] = useState(null);
    const scrollRef = useRef();
-   const navigate = useNavigate();
-
-   useEffect(() => {
-      if (!localStorage.getItem("user")) {
-         navigate("../login");
-      } else {
-         setUser(JSON.parse(localStorage.user));
-      }
-   }, [navigate]);
 
    useEffect(() => {
       async function getFetch() {

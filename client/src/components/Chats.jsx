@@ -1,7 +1,11 @@
 import React from "react";
 import { User } from "./User";
+import { useSelector } from "react-redux";
 
 export const Chats = () => {
+
+   const { allUsers } = useSelector((state) => state.user);
+
    return (
       <div className="chats">
          <div className="py-6 px-7">
@@ -29,20 +33,9 @@ export const Chats = () => {
                Recent
             </h5>
             <div className="max-h-[755px] overflow-auto scrollbar-border scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-slate-300">
-               <User />
-               <User />
-               <User />
-               <User />
-               <User />
-               <User />
-               <User />
-               <User />
-               <User />
-               <User />
-               <User />
-               <User />
-               <User />
-               <User />
+               {allUsers && allUsers.map(user => (
+                  <User key={user._id} {...user}/>
+               ))}
             </div>
          </div>
       </div>

@@ -29,11 +29,13 @@ export const SideBar = () => {
             </div>
 
             {/* bottom nav */}
-            <button className="text-2xl opacity-50 px-4 inline-block rounded-lg py-2 my-2 cursor-pointer">
-               <Link to="/login">
-                  <i className="ri-logout-box-line"></i>
-               </Link>
-            </button>
+            <Link
+               to="/login"
+               onClick={() => {localStorage.clear()}}
+               className="text-2xl opacity-50 px-4 inline-block rounded-lg py-2 my-2 cursor-pointer"
+            >
+               <i className="ri-logout-box-line"></i>
+            </Link>
          </div>
 
          {/* sidechange */}
