@@ -22,7 +22,7 @@ const Register = () => {
 
       if (data.status) {
          toast.success("Registration Successful");
-         navigate("../login");
+         navigate("/");
       } else {
          toast.error(data.message);
       }
