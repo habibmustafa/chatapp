@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 @layer base {
-   html, body, #root {
+   html,
+   body,
+   #root {
       @apply h-full;
       font-family: sans-serif;
    }
@@ -19,12 +21,12 @@
       font-size: 1.3125rem;
       line-height: 1.2;
    }
-   
+
    .text {
       color: #7a7f9a;
    }
 
    .scrollbar-border::-webkit-scrollbar-thumb {
-         border-radius: 15px;
-      }
- }
+      border-radius: 15px;
+   }
+}

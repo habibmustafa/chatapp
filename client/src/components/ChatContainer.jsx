@@ -1,52 +1,53 @@
 import { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ChatInput } from "./ChatInput";
 import { Header } from "./Header";
 import { recieveMessageRoute, sendMessageRoute } from "../utils/APIRoutes";
 import axios from "axios";
+import { setStatus } from "../store/messageSlice";
 
-export const ChatContainer = ({socket}) => {
+export const ChatContainer = ({ socket }) => {
    const [messages, setMessages] = useState([]);
    const scrollRef = useRef();
    const [arrivalMessage, setArrivalMessage] = useState(null);
 
    const { user, chatUser } = useSelector((state) => state.user);
+   const dispatch = useDispatch();
+
+   // real time
+   const time = `${new Date().getHours()}:${new Date().getMinutes()}`;
 
    // send messages
    const sendMessage = async (e) => {
-      if (e) {
-         socket.current.emit("send-msg", {
-            to: chatUser._id,
-            from: user._id,
-            msg: e,
-          });
-
-         await axios.post(sendMessageRoute, {
-            from: user._id,
-            to: chatUser._id,
-            message: e,
-         });
+      if (!e) {
+         return false;
       }
+
+      await axios.post(sendMessageRoute, {
+         from: user._id,
+         to: chatUser._id,
+         message: e,
+      });
+
+      socket.current.emit("send-msg", {
+         to: chatUser._id,
+         from: user._id,
+         msg: e,
+      });
+
       const msgs = [...messages];
       msgs.push({
          fromSelf: true,
          message: e,
-         time: `${new Date().getHours()}:${new Date().getMinutes()}`,
+         time,
       });
       setMessages(msgs);
    };
 
-   useEffect(() => {
-      if (socket.current) {
-        socket.current.on("msg-recieve", (msg) => {
-          setArrivalMessage({ fromSelf: false, message: msg });
-        });
-      }
-    });
-
    // receive messages
    useEffect(() => {
       setMessages("");
+
       async function getFetch() {
          const response = await axios.post(recieveMessageRoute, {
             from: user._id,
@@ -55,19 +56,30 @@ export const ChatContainer = ({socket}) => {
          setMessages(response.data);
       }
       getFetch();
-   }, [chatUser, user]);
 
-    useEffect(() => {
+      if (socket.current) {
+         socket.current.on("msg-recieve", (msg) => {
+            setArrivalMessage({ fromSelf: false, message: msg, time });
+         });
+      }
+   }, [chatUser, user, socket, time]);
+
+   useEffect(() => {
       arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
-    }, [arrivalMessage]);
+   }, [arrivalMessage]);
 
    // scroll down
    useEffect(() => {
-      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-   }, [messages]);
+      scrollRef.current?.scrollIntoView();
+      if (messages.length > 0) {
+         dispatch(setStatus(messages[messages.length - 1]));
+      }
+   }, [messages, dispatch]);
 
+   // tablet:absolute tablet:-right-full
+   // bunu duzelt animasiya
    return (
-      <div className="chatcontainer flex-1 flex flex-col mr-0.5">
+      <div className={`chatcontainer flex-1 flex h-full flex-col bg-white mr-0.5 transition-all duration-300 relative tablet:absolute tablet:z-10 tablet:w-full ${chatUser ? "tablet:-translate-x-0" : "tablet:hidden"}`}>
          <Header />
 
          {/* messages container */}
@@ -84,7 +96,7 @@ export const ChatContainer = ({socket}) => {
                   >
                      {/*  flex-row-reverse */}
                      <div
-                        className={`flex flex-col gap-3.5 ${
+                        className={`flex flex-col gap-4 ${
                            !message.fromSelf ? "items-start" : "items-end"
                         }`}
                      >
@@ -103,25 +115,25 @@ export const ChatContainer = ({socket}) => {
 
                            {/* content */}
                            <div
-                              className={`px-5 py-1.5 rounded-xl min-w-[90px] ${
-                                 message.fromSelf
-                                    ? "text-left bg-[#f5f7fb] text-[#212529]"
-                                    : "text-right bg-[#7269ef] text-white"
+                              className={`px-5 py-1.5 rounded-xl min-w-[90px] max-w-lg flex flex-col items-start bg-[#f5f7fb] text-[#212529] ${
+                                 !message.fromSelf &&
+                                 "items-end bg-[#7269ef] text-white"
                               }`}
                            >
-                              <p className="text-[15px] leading-6 font-medium">
+                              <p className="text-[15px] leading-6 font-medium break-all">
                                  {message.message}
                               </p>
                               <span
                                  className={`w-full text-[#7a7f9a] text-xs leading-[18px] inline-block ${
-                                    !message.fromSelf && "text-[#ffffff80]"
+                                    !message.fromSelf &&
+                                    "text-[#ffffff80] text-right"
                                  }`}
                               >
-                                 00:25
+                                 {message.time}
                               </span>
                            </div>
                         </div>
-                        <p className="text-[#495057] text-sm leading-5  font-medium">
+                        <p className="text-[#495057] text-sm leading-5 font-medium">
                            {/* text-left */}
                            {message.fromSelf
                               ? user.username
@@ -141,7 +153,7 @@ export const ChatContainer = ({socket}) => {
                ))
             ) : (
                <div className="text-3xl flex items-center justify-center h-full">
-                  Loading
+                  Loading...
                </div>
             )}
          </div>

@@ -5,6 +5,9 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    screens: {
+      'tablet': {'max': '991px'},
+    },
   },
   plugins: [
     require('tailwind-scrollbar'),

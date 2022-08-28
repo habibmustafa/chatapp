@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const bcrypt = require("bcrypt")
 
 // register
 module.exports.register = async (req, res, next) => {
@@ -9,14 +10,14 @@ module.exports.register = async (req, res, next) => {
       if (emailCheck) {
          return res.json({ message: "Email already used", status: false });
       }
-      // const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
       const user = new User({
          email,
          username,
-         password,
+         password: hashedPassword,
       });
       await user.save();
-      // delete user.password;
+      delete user.password;
       return res.json({
          user,
          status: true,
@@ -37,14 +38,20 @@ module.exports.login = async (req, res, next) => {
             status: false,
          });
 
-      // const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (user.password !== password) {
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      // if (user.password !== password) {
+      //    return res.json({
+      //       message: "Incorrect Username or Password",
+      //       status: false,
+      //    });
+      // }
+      if (!isPasswordValid) {
          return res.json({
             message: "Incorrect Username or Password",
             status: false,
          });
       }
-      // delete user.password;
+      delete user.password;
       return res.json({ status: true, user });
    } catch (ex) {
       next(ex);
@@ -54,20 +61,27 @@ module.exports.login = async (req, res, next) => {
 // allUsers
 module.exports.allUsers = async (req, res, next) => {
    try {
-     const users = await User.find()
-     return res.json(users);
+      if (!req.params.id) return res.json({ msg: "User id is required " });
+      const users = await User.find({ _id: { $ne: req.params.id } }).select([
+         "_id",
+         "email",
+         "username",
+         "createdAt",
+         "updatedAt",
+      ]);
+      return res.json(users);
    } catch (ex) {
-     next(ex);
+      next(ex);
    }
- };
+};
 
 // logOut
-// module.exports.logOut = async (req, res, next) => {
-//    try {
-//       if (!req.params.id) return res.json({ msg: "User id is required " });
-//       onlineUsers.delete(req.params.id);
-//       return res.status(200).send();
-//    } catch (ex) {
-//       next(ex);
-//    }
-// };
+module.exports.logOut = (req, res, next) => {
+   try {
+      if (!req.params.id) return res.json({ msg: "User id is required " });
+      onlineUsers.delete(req.params.id);
+      return res.status(200).send();
+   } catch (ex) {
+      next(ex);
+   }
+};

@@ -3,16 +3,15 @@ import { User } from "./User";
 import { useSelector } from "react-redux";
 
 export const Chats = () => {
-
-   const { allUsers } = useSelector((state) => state.user);
+   const { allUsers, chatUser } = useSelector((state) => state.user);
 
    return (
       <div className="chats">
          <div className="py-6 px-7">
             <h4 className="h4-size text-[21px] mb-6">Chats</h4>
-   
+
             {/* search */}
-            <div className="w-[333px] h-11 bg-[#e6ebf5] flex items-center rounded-[6.4px] mb-6">
+            <div className="w-[333px] h-11 bg-[#e6ebf5] flex items-center rounded-[6.4px] mb-6 tablet:w-full">
                <span className="flex items-center justify-center ml-2 w-9 h-full">
                   <i className="ri-search-line search-icon text-lg leading-7 text-[#7a7f9a]"></i>
                </span>
@@ -32,10 +31,11 @@ export const Chats = () => {
             <h5 className="text-[#495057] font-semibold leading-5 mb-4">
                Recent
             </h5>
-            <div className="max-h-[755px] overflow-auto scrollbar-border scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-slate-300">
-               {allUsers && allUsers.map(user => (
-                  <User key={user._id} {...user}/>
-               ))}
+            <div className="users max-h-[665px] overflow-auto scrollbar-border scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-slate-300 tablet:max-h-[620px]">
+               {allUsers &&
+                  allUsers.map((user) => (
+                     <User key={user._id} user={user} chatUser={chatUser} />
+                  ))}
             </div>
          </div>
       </div>

@@ -14,6 +14,7 @@ module.exports.getMsg = async (req, res, next) => {
          return {
             fromSelf: msg.sender.toString() === from,
             message: msg.message.text,
+            time: msg.createdAt.toString().substring(16,21)
          };
       });
       res.json(projectedMessages);

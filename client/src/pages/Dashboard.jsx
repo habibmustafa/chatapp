@@ -14,7 +14,7 @@ const Dashboard = () => {
    const { user } = useSelector((state) => state.user);
    const dispatch = useDispatch();
    const navigate = useNavigate();
-   const socket = useRef()
+   const socket = useRef();
 
    useEffect(() => {
       !user && navigate("/login");
@@ -23,10 +23,11 @@ const Dashboard = () => {
    useEffect(() => {
       async function getFetch() {
          if (user) {
-            const getAllUsers = await axios.get(allUsersRoute);
+            const getAllUsers = await axios.get(`${allUsersRoute}/${user._id}`);
             return dispatch(
                setAllUsers(
-                  getAllUsers.data.filter((item) => item._id !== user._id)
+                  getAllUsers.data
+                  // .data.filter((item) => item._id !== user._id)
                )
             );
          }
@@ -42,7 +43,7 @@ const Dashboard = () => {
    }, [user]);
 
    return (
-      <div className="chat flex h-screen">
+      <div className="chat flex h-screen min-w-[280px] relative">
          <SideBar />
          <ChatContainer socket={socket} />
       </div>

@@ -41,7 +41,7 @@ const server = app.listen(process.env.PORT || 5000, () => {
 // socket.io connect react
 const io = socket(server, {
    cors: {
-      origin: "http://localhost:3000" || "https://morechat.netlify.app",
+      origin: "http://localhost:3000",
       credentials: true,
    },
 });
