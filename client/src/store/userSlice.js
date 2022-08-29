@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
    user: localStorage.user ? JSON.parse(localStorage.user) : false,
    allUsers: false,
-   chatUser: false
+   chatUser: false,
 };
 
 export const userSlice = createSlice({
@@ -11,14 +11,14 @@ export const userSlice = createSlice({
    initialState,
    reducers: {
       setUser: (state, action) => {
-         state.user = action.payload
+         state.user = action.payload;
       },
       setAllUsers: (state, action) => {
-         state.allUsers = action.payload
+         state.allUsers = action.payload;
       },
       setChatUser: (state, action) => {
-         state.chatUser= action.payload
-      }
+         state.chatUser = action.payload;
+      },
    },
 });
 

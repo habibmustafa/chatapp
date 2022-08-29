@@ -13,7 +13,6 @@ export const ChatContainer = ({ socket }) => {
    const { user, chatUser } = useSelector((state) => state.user);
 
    // real time
-
    const hour = new Date().getHours()
    const minute = new Date().getMinutes()
    const time = `${hour < 10 ? "0" : ""}${hour} :${minute < 10 ? "0" : ""}${minute}`;
@@ -58,8 +57,8 @@ export const ChatContainer = ({ socket }) => {
       getFetch();
 
       if (socket.current) {
-         socket.current.on("msg-recieve", (data) => {
-            setArrivalMessage({ fromSelf: false, message: data.msg, time });
+         socket.current.on("msg-recieve", (msg) => {
+            setArrivalMessage({ fromSelf: false, message: msg, time });
          });
       }
 
@@ -81,7 +80,7 @@ export const ChatContainer = ({ socket }) => {
    // bunu duzelt animasiya
    return (
       <div
-         className={`chatcontainer flex-1 flex h-full flex-col bg-white mr-0.5 transition-all duration-300 relative tablet:absolute tablet:z-10 tablet:w-full ${
+         className={`chatcontainer flex-1 flex h-full flex-col bg-white mr-0.5 transition-all duration-300 relative tablet:absolute tablet:z-20 tablet:w-full ${
             chatUser ? "tablet:-translate-x-0" : "tablet:hidden"
          }`}
       >

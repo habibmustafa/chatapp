@@ -177,3 +177,18 @@ export const ChatContainer = ({ socket }) => {
       </div>
    );
 };
+
+
+
+
+if(allUsers) {
+   const newArray = allUsers.map(item => {
+      if(item._id === chatUser._id) {
+         return {...item, lastMessage: "AAA", lastTime: time}
+      }
+      return item
+   })
+   dispatch(setAllUsers(newArray))  
+   
+   console.log(newArray);
+}
