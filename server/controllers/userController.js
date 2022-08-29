@@ -71,33 +71,33 @@ module.exports.allUsers = async (req, res, next) => {
          // "updatedAt",
       ]);
 
-      const messages = await Messages.find({
-         users: {
-            $in: req.params.id,
-         },
-      });
+      // const messages = await Messages.find({
+      //    users: {
+      //       $in: req.params.id,
+      //    },
+      // });
 
-      const Users = [];
-      userss.forEach((user) => {
-         const Max = messages
-            .filter(
-               (item) =>
-                  item.users[0] === user._id.toString() ||
-                  item.users[1] === user._id.toString()
-            )
-            .map((item) => {
-               return {
-                  _id: user._id,
-                  email: user.email,
-                  username: user.username,
-                  lastTime: item.createdAt.toString().substring(16, 21),
-                  lastMessage: item.message.text,
-               };
-            });
-         Users.push(Max.pop());
-      });
+      // const Users = [];
+      // userss.forEach((user) => {
+      //    const Max = messages
+      //       .filter(
+      //          (item) =>
+      //             item.users[0] === user._id.toString() ||
+      //             item.users[1] === user._id.toString()
+      //       )
+      //       .map((item) => {
+      //          return {
+      //             _id: user._id,
+      //             email: user.email,
+      //             username: user.username,
+      //             lastTime: item.createdAt.toString().substring(16, 21),
+      //             lastMessage: item.message.text,
+      //          };
+      //       });
+      //    Users.push(Max.pop());
+      // });
 
-      return res.json(Users);
+      return res.json(userss);
    } catch (ex) {
       next(ex);
    }
