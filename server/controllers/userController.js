@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
-const bcrypt = require("bcrypt")
+const Messages = require("../models/msgModel");
+const bcrypt = require("bcryptjs");
 
 // register
 module.exports.register = async (req, res, next) => {
@@ -62,14 +63,41 @@ module.exports.login = async (req, res, next) => {
 module.exports.allUsers = async (req, res, next) => {
    try {
       if (!req.params.id) return res.json({ msg: "User id is required " });
-      const users = await User.find({ _id: { $ne: req.params.id } }).select([
+      const userss = await User.find({ _id: { $ne: req.params.id } }).select([
          "_id",
          "email",
          "username",
-         "createdAt",
-         "updatedAt",
+         // "createdAt",
+         // "updatedAt",
       ]);
-      return res.json(users);
+
+      const messages = await Messages.find({
+         users: {
+            $in: req.params.id,
+         },
+      });
+
+      const Users = [];
+      userss.forEach((user) => {
+         const Max = messages
+            .filter(
+               (item) =>
+                  item.users[0] === user._id.toString() ||
+                  item.users[1] === user._id.toString()
+            )
+            .map((item) => {
+               return {
+                  _id: user._id,
+                  email: user.email,
+                  username: user.username,
+                  lastTime: item.createdAt.toString().substring(16, 21),
+                  lastMessage: item.message.text,
+               };
+            });
+         Users.push(Max.pop());
+      });
+
+      return res.json(Users);
    } catch (ex) {
       next(ex);
    }

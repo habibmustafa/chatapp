@@ -1,8 +1,10 @@
 import React from "react";
 import { User } from "./User";
 import { useSelector } from "react-redux";
+import { useState } from "react";
 
 export const Chats = () => {
+   const [search, setSearch] = useState("");
    const { allUsers, chatUser } = useSelector((state) => state.user);
 
    return (
@@ -17,6 +19,10 @@ export const Chats = () => {
                </span>
                <input
                   type="search"
+                  onChange={(e) => {
+                     setSearch(e.target.value);
+                  }}
+                  value={search}
                   placeholder="Search messages or users"
                   className="w-full h-full bg-inherit text-[#495057] py-2 font-medium px-3 text-sm leading-5 rounded-[6.4px] outline-none"
                />
@@ -32,10 +38,22 @@ export const Chats = () => {
                Recent
             </h5>
             <div className="users max-h-[665px] overflow-auto scrollbar-border scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-slate-300 tablet:max-h-[620px]">
-               {allUsers &&
-                  allUsers.map((user) => (
-                     <User key={user._id} user={user} chatUser={chatUser} />
-                  ))}
+               {allUsers ? (
+                  allUsers
+                     .filter(
+                        (name) =>
+                           !name.username
+                              .toLowerCase()
+                              .indexOf(search.toLowerCase()) || search === ""
+                     )
+                     .map((user) => (
+                        <User key={user._id} user={user} chatUser={chatUser} />
+                     ))
+               ) : (
+                  <div className="flex justify-center items-center h-[665px]">
+                     Loading...
+                  </div>
+               )}
             </div>
          </div>
       </div>

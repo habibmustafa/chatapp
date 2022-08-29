@@ -29,4 +29,8 @@
    .scrollbar-border::-webkit-scrollbar-thumb {
       border-radius: 15px;
    }
+
+   .box-shadow {
+      box-shadow: 0 2px 4px rgb(15 34 58 / 12%);
+   }
 }

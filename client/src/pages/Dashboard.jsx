@@ -20,21 +20,22 @@ const Dashboard = () => {
       !user && navigate("/login");
    }, [user, navigate]);
 
+   // get all users db
    useEffect(() => {
       async function getFetch() {
          if (user) {
             const getAllUsers = await axios.get(`${allUsersRoute}/${user._id}`);
-            return dispatch(
-               setAllUsers(
-                  getAllUsers.data
-                  // .data.filter((item) => item._id !== user._id)
-               )
-            );
+            return dispatch(setAllUsers(getAllUsers.data));
          }
       }
       getFetch();
+
+      return () => {
+         dispatch(setAllUsers(false));
+      };
    }, [user, dispatch]);
 
+   // user add socket.io
    useEffect(() => {
       if (user) {
          socket.current = io(host);

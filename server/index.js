@@ -41,7 +41,7 @@ const server = app.listen(process.env.PORT || 5000, () => {
 // socket.io connect react
 const io = socket(server, {
    cors: {
-      origin: "https://morechat.netlify.app",
+      origin: "http://localhost:3000",
       credentials: true,
    },
 });
@@ -56,7 +56,7 @@ io.on("connection", (socket) => {
    socket.on("send-msg", (data) => {
       const sendUserSocket = onlineUsers.get(data.to);
       if (sendUserSocket) {
-         socket.to(sendUserSocket).emit("msg-recieve", data.msg);
+         socket.to(sendUserSocket).emit("msg-recieve", data);
       }
    });
 });

@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { ChatInput } from "./ChatInput";
 import { Header } from "./Header";
 import { recieveMessageRoute, sendMessageRoute } from "../utils/APIRoutes";
 import axios from "axios";
-import { setStatus } from "../store/messageSlice";
 
 export const ChatContainer = ({ socket }) => {
    const [messages, setMessages] = useState([]);
@@ -12,10 +11,12 @@ export const ChatContainer = ({ socket }) => {
    const [arrivalMessage, setArrivalMessage] = useState(null);
 
    const { user, chatUser } = useSelector((state) => state.user);
-   const dispatch = useDispatch();
 
    // real time
-   const time = `${new Date().getHours()}:${new Date().getMinutes()}`;
+
+   const hour = new Date().getHours()
+   const minute = new Date().getMinutes()
+   const time = `${hour < 10 ? "0" : ""}${hour} :${minute < 10 ? "0" : ""}${minute}`;
 
    // send messages
    const sendMessage = async (e) => {
@@ -33,6 +34,7 @@ export const ChatContainer = ({ socket }) => {
          to: chatUser._id,
          from: user._id,
          msg: e,
+         time
       });
 
       const msgs = [...messages];
@@ -46,8 +48,6 @@ export const ChatContainer = ({ socket }) => {
 
    // receive messages
    useEffect(() => {
-      setMessages("");
-
       async function getFetch() {
          const response = await axios.post(recieveMessageRoute, {
             from: user._id,
@@ -58,10 +58,14 @@ export const ChatContainer = ({ socket }) => {
       getFetch();
 
       if (socket.current) {
-         socket.current.on("msg-recieve", (msg) => {
-            setArrivalMessage({ fromSelf: false, message: msg, time });
+         socket.current.on("msg-recieve", (data) => {
+            setArrivalMessage({ fromSelf: false, message: data.msg, time });
          });
       }
+
+      return () => {
+         setMessages(false);
+      };
    }, [chatUser, user, socket, time]);
 
    useEffect(() => {
@@ -71,15 +75,16 @@ export const ChatContainer = ({ socket }) => {
    // scroll down
    useEffect(() => {
       scrollRef.current?.scrollIntoView();
-      if (messages.length > 0) {
-         dispatch(setStatus(messages[messages.length - 1]));
-      }
-   }, [messages, dispatch]);
+   }, [messages]);
 
    // tablet:absolute tablet:-right-full
    // bunu duzelt animasiya
    return (
-      <div className={`chatcontainer flex-1 flex h-full flex-col bg-white mr-0.5 transition-all duration-300 relative tablet:absolute tablet:z-10 tablet:w-full ${chatUser ? "tablet:-translate-x-0" : "tablet:hidden"}`}>
+      <div
+         className={`chatcontainer flex-1 flex h-full flex-col bg-white mr-0.5 transition-all duration-300 relative tablet:absolute tablet:z-10 tablet:w-full ${
+            chatUser ? "tablet:-translate-x-0" : "tablet:hidden"
+         }`}
+      >
          <Header />
 
          {/* messages container */}
@@ -115,18 +120,18 @@ export const ChatContainer = ({ socket }) => {
 
                            {/* content */}
                            <div
-                              className={`px-5 py-1.5 rounded-xl min-w-[90px] max-w-lg flex flex-col items-start bg-[#f5f7fb] text-[#212529] ${
+                              className={`px-5 py-1.5 rounded-xl min-w-[90px] max-w-lg flex flex-col items-start bg-[#7269ef] text-white ${
                                  !message.fromSelf &&
-                                 "items-end bg-[#7269ef] text-white"
+                                 "items-end !bg-[#f5f7fb] !text-[#212529]"
                               }`}
                            >
                               <p className="text-[15px] leading-6 font-medium break-all">
                                  {message.message}
                               </p>
                               <span
-                                 className={`w-full text-[#7a7f9a] text-xs leading-[18px] inline-block ${
+                                 className={`w-full text-[#ffffff80] text-xs leading-[18px] inline-block ${
                                     !message.fromSelf &&
-                                    "text-[#ffffff80] text-right"
+                                    "!text-[#7a7f9a] text-right"
                                  }`}
                               >
                                  {message.time}

@@ -5,24 +5,47 @@ import { Chats } from "./Chats";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setChatUser } from "../store/userSlice";
+import { useState } from "react";
 
 export const SideBar = () => {
+   const [button, setButton] = useState({
+      item: [
+         {
+            id: 1,
+            name: "ri-user-2-line",
+         },
+         {
+            id: 2,
+            name: "ri-message-3-line",
+         },
+         {
+            id: 3,
+            name: "ri-group-line",
+         },
+         {
+            id: 4,
+            name: "ri-settings-2-line",
+         },
+      ],
+      active: 2,
+   });
+
    const navigate = useNavigate();
-   const dispatch = useDispatch()
+   const dispatch = useDispatch();
 
    const handleClick = async () => {
       const { _id } = JSON.parse(localStorage.user);
       const data = await axios.get(`${logoutRoute}/${_id}`);
       if (data.status === 200) {
          localStorage.clear();
-         dispatch(setChatUser(false))
+         dispatch(setChatUser(false));
          navigate("/login");
       }
    };
    return (
       <div className="sidebar flex h-screen tablet:flex-col-reverse tablet:w-full">
          {/* sidemenu */}
-         <div className="sidemenu shadow-lg max-w-[75px] h-screen flex flex-col justify-between items-center p-4 tablet:max-w-full tablet:p-1 tablet:flex-1 tablet:flex-row">
+         <div className="sidemenu box-shadow relative z-20 max-w-[75px] h-screen flex flex-col justify-between items-center p-4 tablet:max-w-full tablet:p-1 tablet:flex-1 tablet:flex-row">
             {/* logo */}
             <div className="flex items-center gap-1 text-3xl text-[#7269ef] cursor-pointer tablet:hidden">
                <i className="ri-chat-smile-2-fill"></i>
@@ -30,20 +53,20 @@ export const SideBar = () => {
 
             {/* center nav */}
             <div className="flex flex-col gap-2 tablet:gap-0 tablet:flex-row tablet:justify-around tablet:w-full">
-               <button className="text-2xl opacity-50 px-4 inline-block rounded-lg py-3 cursor-pointer focus:bg-slate-200 tablet:text-xl tablet:px-3.5 tablet:py-2.5">
-                  <i className="ri-user-2-line"></i>
-               </button>
-               <button className="text-2xl opacity-50 px-4 inline-block rounded-lg py-3 cursor-pointer focus:bg-slate-200 tablet:text-xl tablet:px-3.5 tablet:py-2.5">
-                  <i className="ri-message-3-line"></i>
-               </button>
-               <button className="text-2xl opacity-50 px-4 inline-block rounded-lg py-3 cursor-pointer focus:bg-slate-200 tablet:text-xl tablet:px-3.5 tablet:py-2.5">
-                  <i className="ri-group-line"></i>
-               </button>
-               <button className="text-2xl opacity-50 px-4 inline-block rounded-lg py-3 cursor-pointer focus:bg-slate-200 tablet:text-xl tablet:px-3.5 tablet:py-2.5">
-                  <i className="ri-settings-2-line"></i>
-               </button>
+               {button.item.map((icon) => (
+                  <button
+                     key={icon.id}
+                     onClick={() => {
+                        setButton({ ...button, active: icon.id });
+                     }}
+                     className={`text-2xl opacity-50 px-4 inline-block rounded-lg py-3 cursor-pointer tablet:text-xl tablet:px-3.5 tablet:py-2.5 ${
+                        icon.id === button.active && "bg-slate-200"
+                     }`}
+                  >
+                     <i className={icon.name}></i>
+                  </button>
+               ))}
                <button
-                  to="/login"
                   onClick={handleClick}
                   className="text-2xl opacity-50 px-4 inline-block rounded-lg py-2 cursor-pointer tablet:text-xl tablet:px-3.5 tablet:py-2.5"
                >
