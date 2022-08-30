@@ -7,8 +7,6 @@ export const Chats = () => {
    const [search, setSearch] = useState("");
    const { allUsers, chatUser } = useSelector((state) => state.user);
 
-   console.log(allUsers);
-
    return (
       <div className="chats">
          <div className="py-6 px-7">

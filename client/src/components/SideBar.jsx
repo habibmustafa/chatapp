@@ -59,8 +59,8 @@ export const SideBar = () => {
                      onClick={() => {
                         setButton({ ...button, active: icon.id });
                      }}
-                     className={`text-2xl opacity-50 px-4 inline-block rounded-lg py-3 cursor-pointer tablet:text-xl tablet:px-3.5 tablet:py-2.5 ${
-                        icon.id === button.active && "bg-slate-200"
+                     className={`text-2xl text-[#878a82] px-4 inline-block rounded-lg py-3 cursor-pointer tablet:text-xl tablet:px-3.5 tablet:py-2.5 ${
+                        icon.id === button.active && "bg-[#f7f7ff] !text-[#7269ef]"
                      }`}
                   >
                      <i className={icon.name}></i>

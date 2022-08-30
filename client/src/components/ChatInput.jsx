@@ -1,8 +1,13 @@
 import React from "react";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setAllUsers } from "../store/userSlice";
 
-export const ChatInput = ({ sendMessage }) => {
+export const ChatInput = ({ sendMessage, time }) => {
    const [value, setValue] = useState("");
+
+   const { allUsers, chatUser } = useSelector((state) => state.user);
+   const dispatch = useDispatch();
 
    const handleSubmit = (e) => {
       e.preventDefault();
@@ -10,6 +15,14 @@ export const ChatInput = ({ sendMessage }) => {
          sendMessage(value);
          setValue("");
       }
+
+      const newArray = allUsers.map((item) => {
+         if (item._id === chatUser._id) {
+            return { ...item, lastMessage: value, lastTime: time };
+         }
+         return item;
+      });
+      dispatch(setAllUsers(newArray));
    };
 
    return (

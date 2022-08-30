@@ -5,6 +5,7 @@ import { setChatUser } from "../store/userSlice";
 export const User = ({ chatUser, user}) => {
    const dispatch = useDispatch();
 
+
    return (
       <div
          onClick={() => dispatch(setChatUser(user))}
@@ -21,9 +22,9 @@ export const User = ({ chatUser, user}) => {
             <h5 className="font-semibold text-[15px] text-[#495057] leading-[18px] mb-1">
                {user.username}
             </h5>
-            <p className="text-sm leading-5">Ok, Sure</p>
+            <p className="text-sm leading-5">{user?.lastMessage}</p>
          </div>
-         <div className="text-[11px] leading-4 h-full ">12:50</div>
+         <div className="text-[11px] leading-4 h-full ">{user?.lastTime}</div>
       </div>
    );
 };

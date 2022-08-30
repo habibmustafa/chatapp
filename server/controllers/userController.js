@@ -71,33 +71,71 @@ module.exports.allUsers = async (req, res, next) => {
          // "updatedAt",
       ]);
 
-      // const messages = await Messages.find({
-      //    users: {
-      //       $in: req.params.id,
-      //    },
-      // });
+      const messages = await Messages.find({
+         users: {
+            $in: req.params.id,
+         },
+      });
 
       // const Users = [];
       // userss.forEach((user) => {
-      //    const Max = messages
-      //       .filter(
-      //          (item) =>
-      //             item.users[0] === user._id.toString() ||
-      //             item.users[1] === user._id.toString()
-      //       )
-      //       .map((item) => {
+      //    const index = messages.findIndex(item => item.users[0] === user._id.toString() || item.users[1] === user._id.toString())
+      //    console.log(index);
+
+         // if(index > -1) {
+
+         //    const Max = messages.map((item, i) => {
+         //       if(index === i) {
+         //          return {
+         //             ...user, 
+         //             lastTime: item.createdAt.toString().substring(16, 21),
+         //             lastMessage: item.message.text,
+         //          };
+         //       }
+
+         //       return user
+         //    })
+         // }
+
+      //       const lastMessage = messages?.filter((item) => item.users[0] === user._id.toString() || item.users[1] === user._id.toString())
+      //       console.log(lastMessage);
+      //       const recent = lastMessage.map((item) => {
+               
+      //          if(index === -1) {
+      //             return {
+      //                _id: user._id
+      //             }
+      //          }
       //          return {
       //             _id: user._id,
       //             email: user.email,
       //             username: user.username,
-      //             lastTime: item.createdAt.toString().substring(16, 21),
-      //             lastMessage: item.message.text,
+      //             lastTime: item?.createdAt.toString().substring(16, 21),
+      //             lastMessage: item?.message.text,
       //          };
       //       });
-      //    Users.push(Max.pop());
+
+      //       Users.push(recent.pop());
+
       // });
 
-      return res.json(userss);
+      const Users = userss.map(user => {
+         const lastMessage = messages.filter((item) => item.users[0] === user._id.toString() || item.users[1] === user._id.toString()).pop()
+      
+         if(!lastMessage) {
+            return {
+               ...user._doc
+            }
+         }
+
+         return {
+            ...user._doc,
+            lastTime: lastMessage?.createdAt.toString().substring(16, 21),
+            lastMessage: lastMessage?.message.text,
+         }
+      })
+
+      return res.json(Users);
    } catch (ex) {
       next(ex);
    }
